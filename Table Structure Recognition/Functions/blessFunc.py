@@ -30,7 +30,7 @@ def extractTextBless(img):
 
 ## Input : Roi of Table , Orignal Image, Cells Detected
 ## Output : Returns XML element which has contains bounding box of textchunks
-def borderless(table, image, res_cells):
+def borderless(table, image, res_cells, imgname):
     cells = []
     x_lines = []
     y_lines = []
@@ -322,8 +322,10 @@ def borderless(table, image, res_cells):
         cv2.rectangle(im2, (tbox[0], tbox[1]), (tbox[2], tbox[3]), colors[no%len(colors)], 1)
         # print(tbox)
 
-    cv2.imshow("text chunks", im2)
-    cv2.waitKey(0)
+    #cv2.imshow("text chunks", im2)
+    chunkname = imgname.split('/')[-1]
+    cv2.imwrite('../../samples/imout/'+chunkname, im2)
+    #cv2.waitKey(0)
 
     def rowstart(val):
       r = 0

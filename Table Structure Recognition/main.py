@@ -6,20 +6,25 @@ import lxml.etree as etree
 import glob
 
 ############ To Do ############
-image_path = 'path to directory of images'
-xmlPath = 'path to save xml'
+image_path = '/content/samples/images/*.png'
+xmlPath = '/content/samples/xml/'
 
-config_fname = "path to config file of model" 
-checkpoint_path = "path to checkpoint directory"
-epoch = 'epoch_file.name'
+config_fname = '/content/CascadeTabNet/Config/cascade_mask_rcnn_hrnetv2p_w32_20e.py'
+checkpoint_path = '/content/CascadeTabNet/'
+epoch = 'epoch_36.pth'
 ##############################
 
 
 model = init_detector(config_fname, checkpoint_path+epoch)
+print('model loaded')
+
 
 # List of images in the image_path
 imgs = glob.glob(image_path)
+print(imgs)
+
 for i in imgs:
+    print ('image: {}'.format(i))
     result = inference_detector(model, i)
     res_border = []
     res_bless = []
@@ -50,7 +55,12 @@ for i in imgs:
     if len(res_bless) != 0:
         if len(res_cell) != 0:
             for no,res in enumerate(res_bless):
-                root.append(borderless(res,cv2.imread(i),res_cell))
+                root.append(borderless(res,cv2.imread(i),res_cell,i))
+
+    print('border: {}'.format(len(res_border)))
+    print('borderless: {}'.format(len(res_bless)))
+    print('cells: {}'.format(len(res_cell)))
+
 
     myfile = open(xmlPath+i.split('/')[-1][:-3]+'xml', "w")
     myfile.write('<?xml version="1.0" encoding="UTF-8"?>\n')
